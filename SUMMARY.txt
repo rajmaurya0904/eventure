@@ -1,0 +1,3 @@
+Updated pyproject.toml with dependencies mcp>=1.0 and pydantic>=2.0.
+Verified that `python -m pip install -e .` succeeds and package is recognized.
+Tests pass.
