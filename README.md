@@ -2,7 +2,7 @@
 
 **An MCP server that exposes a simple API to publish/subscribe to local events, enabling AI agents to coordinate via event bus.**
 
-<!-- THE PROBLEM: 2-3 concrete lines on the annoying thing this removes. -->
+AI agents running locally need a simple way to coordinate without external dependencies. Setting up message brokers or custom plumbing for each project wastes time and adds complexity. Eventure provides a zero-configuration event bus that lets agents communicate via local events, so you can focus on the agent logic.
 
 ## Example
 
