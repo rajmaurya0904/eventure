@@ -24,7 +24,7 @@ pip install -e ".[dev]"
 
 ## Limitations
 
-<!-- Honest and short: what it does NOT do, known gaps. -->
+Eventure runs in a single process and stores events only in memory. It does not persist data to disk, so a restart loses all events. The server is not designed for clustering or high‑availability; it cannot be accessed from other machines or across network boundaries. There is no authentication or authorization, and message ordering is not guaranteed beyond the order of arrival in the single process. These constraints make it suitable for local experimentation and prototyping, but not for production deployments that require durability, scalability, or security.
 
 ## Development
 
