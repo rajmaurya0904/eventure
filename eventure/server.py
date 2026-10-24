@@ -31,7 +31,7 @@ are durable: subscribing again under the same name and pattern resumes where you
 def create_server(bus: EventBus | None = None, *, name: str = "eventure") -> FastMCP:
     """Build the MCP server around ``bus`` (a bus on the default database if omitted)."""
     bus = bus or EventBus(default_db_path())
-    mcp = FastMCP(name, instructions=INSTRUCTIONS)
+    mcp = FastMCP(name, instructions=INSTRUCTIONS, log_level="WARNING")
     mcp.bus = bus  # type: ignore[attr-defined]  # exposed so callers and tests can inspect it
 
     @mcp.tool()
