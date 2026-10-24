@@ -12,6 +12,7 @@ import json
 import os
 import sqlite3
 import threading
+import time
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -78,10 +79,27 @@ class Store:
         self._conn = sqlite3.connect(
             self.path, timeout=busy_timeout, isolation_level=None, check_same_thread=False
         )
-        if self.path != MEMORY:
-            self._conn.execute("PRAGMA journal_mode=WAL")
-        self._conn.execute("PRAGMA synchronous=NORMAL")
-        self._conn.executescript(SCHEMA)
+        self._initialise(busy_timeout)
+
+    def _initialise(self, busy_timeout: float) -> None:
+        """Switch to WAL and create tables, retrying while another process does the same.
+
+        Two servers started at the same instant on a fresh file can both try to change the
+        journal mode; SQLite reports "database is locked" immediately for that rather than
+        waiting, so the busy timeout is not enough on its own.
+        """
+        deadline = time.monotonic() + busy_timeout
+        while True:
+            try:
+                if self.path != MEMORY:
+                    self._conn.execute("PRAGMA journal_mode=WAL")
+                self._conn.execute("PRAGMA synchronous=NORMAL")
+                self._conn.executescript(SCHEMA)
+                return
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc) or time.monotonic() >= deadline:
+                    raise
+                time.sleep(0.05)
 
     def close(self) -> None:
         with self._lock:
