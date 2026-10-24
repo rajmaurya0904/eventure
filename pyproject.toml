@@ -5,7 +5,7 @@ description = "An MCP server that exposes a simple API to publish/subscribe to l
 requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = [
-    "mcp>=1.0",
+    "mcp>=1.9,<2",
     "pydantic>=2.0",
 ]
 

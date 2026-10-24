@@ -20,6 +20,8 @@ from .models import (
     Subscription,
     UnknownSubscription,
     validate_pattern,
+    validate_payload,
+    validate_topic,
 )
 from .patterns import matches
 from .store import MEMORY, Store
@@ -100,9 +102,11 @@ class EventBus:
 
     def publish(self, topic: str, payload: Any = None, publisher: str = "") -> Event:
         """Store an event and notify in-process listeners. Raises on a bad topic or payload."""
+        validate_topic(topic)
+        payload = validate_payload({} if payload is None else payload)
         event = Event(
             topic=topic,
-            payload={} if payload is None else payload,
+            payload=payload,
             publisher=publisher.strip() if isinstance(publisher, str) else "",
         )
         stored = self.store.add_event(event, self.retention)
