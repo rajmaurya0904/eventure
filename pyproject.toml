@@ -16,7 +16,7 @@ dev = [
 ]
 
 [project.scripts]
-eventure = "eventure.server:main"
+eventure = "eventure.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
